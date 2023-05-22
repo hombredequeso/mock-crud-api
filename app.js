@@ -53,7 +53,8 @@ app.delete('/:entity/:id', (req, res) => {
 app.get("/:entity/:id", (req, res) => {
   const key = getKeyFromRequest(req);
   console.log(`GET ${key}`)
-  const resourceValue = cache.get(key);
+  const allKey = getKey(req.params.entity, "*")
+  const resourceValue = cache.get(key) || cache.get(allKey);
 
   if (resourceValue) {
     res.status(200).json(resourceValue);
@@ -68,6 +69,9 @@ app.get("/:entity/:id", (req, res) => {
 // Consequently: this will never return 404, but at worst, an array with only 'null' values
 app.get("/:entity", (req, res) => {
   console.log(`GET ${req.params.entity}/${req.query.ids}`)
+  if (!req?.query?.ids) {
+    res.status(404).end();
+  }
   const keys = {entity: req.params.entity, ids: req.query.ids.split(',')};
   const result = keys.ids.map(id => cache.get(getKey(keys.entity, id)));
   res.status(200).json(result);

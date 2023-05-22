@@ -1,0 +1,17 @@
+{
+  "book/123": {
+    "id": "123",
+    "title": "Picture of Dorian Grey",
+    "author": "Oscar Wilde"
+  },
+  "book/456": {
+    "id": "456",
+    "title": "Domain-Driven Design",
+    "author": "Eric Evans"
+  },
+  "book/789": {
+    "id": "789",
+    "title": "On First Principles",
+    "author": "Origen"
+  }
+}

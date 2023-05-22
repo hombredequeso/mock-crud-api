@@ -1,0 +1,7 @@
+{
+  "books/*": {
+    "id": "9999999",
+    "title": "CommonBookTitle",
+    "author": "John Doe"
+  }
+}
