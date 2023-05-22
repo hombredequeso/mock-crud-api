@@ -1,0 +1,12 @@
+{
+  "name": "mock-crud-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  }, "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "lru-cache": "^9.1.1"
+  }
+}
