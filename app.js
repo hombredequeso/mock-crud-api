@@ -50,11 +50,24 @@ app.delete('/:entity/:id', (req, res) => {
   res.status(responseStatus).end();
 })
 
+const getFromCacheIncludingWildcardId = (cacheL, entity, id) => {
+  const exactResult = cacheL.get(getKey(entity, id));
+  if (exactResult !== undefined){
+    return exactResult;
+  }
+
+  const wildCardResult = 
+    cacheL.get(getKey(entity, "*"));
+  if (wildCardResult && wildCardResult?.id && wildCardResult.id !== id) {
+    let clonedResult = {...wildCardResult, id: id};
+    return clonedResult;
+  }
+  return undefined;
+}
+
 app.get("/:entity/:id", (req, res) => {
-  const key = getKeyFromRequest(req);
-  console.log(`GET ${key}`)
-  const allKey = getKey(req.params.entity, "*")
-  const resourceValue = cache.get(key) || cache.get(allKey);
+  console.log(`GET ${req.params.entity}/${req.params.id}`);
+  const resourceValue = getFromCacheIncludingWildcardId(cache, req.params.entity, req.params.id)
 
   if (resourceValue) {
     res.status(200).json(resourceValue);
@@ -68,13 +81,18 @@ app.get("/:entity/:id", (req, res) => {
 // (cache.get return 'undefined', JSON turns that array element into 'null')
 // Consequently: this will never return 404, but at worst, an array with only 'null' values
 app.get("/:entity", (req, res) => {
-  console.log(`GET ${req.params.entity}/${req.query.ids}`)
+  console.log(`GET ${req.params.entity}?ids=${req.query.ids}`)
   if (!req?.query?.ids) {
     res.status(404).end();
   }
   const keys = {entity: req.params.entity, ids: req.query.ids.split(',')};
-  const result = keys.ids.map(id => cache.get(getKey(keys.entity, id)));
-  res.status(200).json(result);
+  const entity = keys.entity;
+  const entityArray = keys.ids.map(entityId => {
+    const entityValue = getFromCacheIncludingWildcardId(cache, entity, entityId);
+    return entityValue;
+  });
+
+  res.status(200).json(entityArray);
 })
 
 app.listen(port, () => {
