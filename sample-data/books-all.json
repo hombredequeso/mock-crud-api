@@ -1,5 +1,6 @@
 {
-  "books/*": {
+  "book/2": null,
+  "book/*": {
     "id": "9999999",
     "title": "CommonBookTitle",
     "author": "John Doe"
