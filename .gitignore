@@ -133,3 +133,5 @@ dist
 .mock-apis
 
 .data/
+
+.vscode/

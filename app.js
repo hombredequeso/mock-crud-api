@@ -15,6 +15,7 @@ const initializeCache = (cacheData, cache) => {
     cache.set(key, value);
     ++itemsAddedToCache;
   });
+  console.log(`Startup: items added to cache: ${itemsAddedToCache}`);
   return itemsAddedToCache;
 }
 
@@ -56,12 +57,18 @@ const getFromCacheIncludingWildcardId = (cacheL, entity, id) => {
     return exactResult;
   }
 
-  const wildCardResult = 
-    cacheL.get(getKey(entity, "*"));
+  const wildCardKey = getKey(entity, "*");
+  const wildCardResult = cacheL.get(wildCardKey);
+
   if (wildCardResult && wildCardResult?.id && wildCardResult.id !== id) {
     let clonedResult = {...wildCardResult, id: id};
     return clonedResult;
   }
+
+  if (wildCardResult) {
+    return wildCardResult;
+  }
+
   return undefined;
 }
 
@@ -92,7 +99,12 @@ app.get("/:entity", (req, res) => {
     return entityValue;
   });
 
-  res.status(200).json(entityArray);
+
+  const response = {
+    jobs: entityArray
+  }
+
+  res.status(200).json(response);
 })
 
 app.listen(port, () => {
