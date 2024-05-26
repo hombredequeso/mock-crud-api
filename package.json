@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf ./node_modules",
     "start": "node app.js",
     "start:dev": "nodemon app.js"
   },

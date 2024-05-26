@@ -90,8 +90,15 @@ app.get("/:entity/:id", (req, res) => {
 app.get("/:entity", (req, res) => {
   console.log(`GET ${req.params.entity}?ids=${req.query.ids}`)
   if (!req?.query?.ids) {
-    res.status(404).end();
+    const resourceValue = cache.get(req.params.entity);
+    if (resourceValue) {
+      res.status(200).json(resourceValue);
+    } else {
+      res.status(404).end();
+    }
+    return;
   }
+
   const keys = {entity: req.params.entity, ids: req.query.ids.split(',')};
   const entity = keys.entity;
   const entityArray = keys.ids.map(entityId => {
@@ -100,11 +107,25 @@ app.get("/:entity", (req, res) => {
   });
 
 
-  const response = {
-    jobs: entityArray
-  }
+  // const response = {
+  //   jobs: entityArray
+  // }
 
-  res.status(200).json(response);
+  res.status(200).json(entityArray);
+})
+
+const allPaths = new RegExp("/*/");
+app.get(allPaths, (req, res) => {
+  const url = req.originalUrl;
+  const resourceValue = cache.get(url.substring(1))
+
+  console.log({url});
+
+  if (resourceValue) {
+    res.status(200).json(resourceValue);
+  } else {
+    res.status(404).end();
+  }
 })
 
 app.listen(port, () => {
