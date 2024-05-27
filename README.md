@@ -31,4 +31,13 @@ books-all.json: specify one common resource using '*' (will be the resource for 
 > curl -X DELETE localhost:3000/book/999
 > curl localhost:3000/book/999          
  
- ```
+```
+
+# Docker Notes
+
+```
+docker build -t mock-crud-api .
+
+docker run -d --rm -p 3000:3000 -v ./.data:/data mock-crud-api:latest '../data/cats.json' 
+
+```
