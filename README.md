@@ -38,6 +38,6 @@ books-all.json: specify one common resource using '*' (will be the resource for 
 ```
 docker build -t mock-crud-api .
 
-docker run -d --rm -p 3000:3000 -v ./.data:/data mock-crud-api:latest '../data/cats.json' 
+docker run --rm -t -i -p 3000:3000 -v ./data:/data mock-crud-api:latest '/data/grumpy-cat-graphql-tutorial.json'
 
 ```
